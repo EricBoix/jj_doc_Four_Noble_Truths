@@ -42,7 +42,7 @@ The also adapt the following LLM server designation and credentials
 
 ```bash
 LLM_MODEL_URL=https://ollama-ui.pagoda.liris.cnrs.fr/ollama/
-LLM_API_KEY=sk-<xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+LLM_API_KEY=sk-<xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>
 LLM_MODEL_NAME=llama3:70b
 ```
 
@@ -70,6 +70,7 @@ launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 ### Run the (Knowledge Graph) extraction
 
 ```bash
+source jj_shell_utils/treatments.sh   # Implicit from now on
 # Note: the documents are implicitly in <cwd>/original_data sub-directory
 extract_knowledge_graph '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
 ```

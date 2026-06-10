@@ -54,23 +54,23 @@ dump_database () {
       echo "  2. the database-dump target filename (same directory as dumped)"
       return
   fi
-  DATABASE_DIR=$1
-  if [[ ! "$DATABASE_DIR" = /* ]]; 
+  RESULTS_DIR=$1
+  if [[ ! "$RESULTS_DIR" = /* ]]; 
     then
     echo "The directory argument must be an absolute path."
     echo "The one provided was $1. Exiting."
     return
   fi
-  BACKUPS_DIR=$DATABASE_DIR/backups
-  DATABASE_DIR=$DATABASE_DIR/database
+  DATABASE_DIR=$RESULTS_DIR/database
+  BACKUPS_DIR=$RESULTS_DIR/backups
   DUMP_FILENAME=$2
 
   # Dumping requires the DB to be halted properly
   stop_neo4j_db
   docker run --interactive --tty --rm  \
     --volume=$DATABASE_DIR:/data \
-    --volume=$BACKUPS_DIR:/backups \
-    neo4j/neo4j-admin neo4j-admin database dump neo4j --to-path=/backups
+    --volume=$BACKUPS_DIR:/output \
+    neo4j/neo4j-admin neo4j-admin database dump neo4j --to-path=/output
   # neo4j-admin does not allow to provide the filename of the dump.
   # Note: alas, when restoring the dump, the provided database name must have a 
   # length between 1 and 63 characters...
@@ -87,15 +87,15 @@ restore_database () {
       echo "  2. the database-dump target filename (same directory as dumped)"
       return
   fi
-  DATABASE_DIR=$1
-  if [[ ! "$DATABASE_DIR" = /* ]]; 
+  RESULTS_DIR=$1
+  if [[ ! "$RESULTS_DIR" = /* ]]; 
     then
     echo "The directory argument must be an absolute path."
     echo "The one provided was $1. Exiting."
     return
   fi
-  BACKUPS_DIR=$DATABASE_DIR/backups
-  DATABASE_DIR=$DATABASE_DIR/database
+  DATABASE_DIR=$RESULTS_DIR/database
+  BACKUPS_DIR=$RESULTS_DIR/backups
   DUMP_FILENAME=$2
    
   # The name of the dumped database file DID NOT matter: we still have to 
