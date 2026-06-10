@@ -2,18 +2,18 @@
 @prefix neo: <http://example.org/neo4j/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_0 a neo:Document ;
-    neo:MENTIONS ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_1,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_10,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_11,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_2,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_3,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_4,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_5,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_6,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_7,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_8,
-        ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_9 ;
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_0 a neo:Document ;
+    neo:MENTIONS ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_1,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_10,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_11,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_2,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_3,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_4,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_5,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_6,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_7,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_8,
+        ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_9 ;
     neo:id "291554220f81fa282fd82f7c923bb084"^^xsd:string ;
     neo:source "/data/250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md"^^xsd:string ;
     neo:text """The four truths are
@@ -26,51 +26,51 @@ Nirodha (cessation, ending, confinement): the attachment to this transient world
 
 Marga (road, path, way): the Noble Eightfold Path is the path leading to the confinement of this desire and attachment, and the release from dukkha."""^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_1 a neo:Concept,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_1 a neo:Concept,
         neo:__Entity__ ;
-    neo:CHARACTERISTIC_OF ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_5 ;
+    neo:CHARACTERISTIC_OF ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_5 ;
     neo:id "Dukkha"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_2 a neo:Concept,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_2 a neo:Concept,
         neo:__Entity__ ;
-    neo:CAUSE_OF ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_7 ;
+    neo:CAUSE_OF ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_7 ;
     neo:id "Samudaya"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_3 a neo:Concept,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_3 a neo:Concept,
         neo:__Entity__ ;
-    neo:CESSATION_OF ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_10 ;
+    neo:CESSATION_OF ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_10 ;
     neo:id "Nirodha"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_4 a neo:Concept,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_4 a neo:Concept,
         neo:__Entity__ ;
-    neo:PATH_TO ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_11 ;
+    neo:PATH_TO ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_11 ;
     neo:id "Marga"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_6 a neo:Entity,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_6 a neo:Entity,
         neo:__Entity__ ;
     neo:id "Pain"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_8 a neo:Entity,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_8 a neo:Entity,
         neo:__Entity__ ;
     neo:id "Desire"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_9 a neo:Entity,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_9 a neo:Entity,
         neo:__Entity__ ;
     neo:id "Longing"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_10 a neo:Entity,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_10 a neo:Entity,
         neo:__Entity__ ;
     neo:id "Craving"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_11 a neo:Path,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_11 a neo:Path,
         neo:__Entity__ ;
     neo:id "Noble Eightfold Path"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_5 a neo:Entity,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_5 a neo:Entity,
         neo:__Entity__ ;
     neo:id "Transient Existence"^^xsd:string .
 
-ex:node_4_4227ca93_1f39_4825_8d74_9004870f9127_7 a neo:Entity,
+ex:node_4_a8d96f48_1b61_4e2f_8c4e_36c5ab58239d_7 a neo:Entity,
         neo:__Entity__ ;
     neo:id "Thirst"^^xsd:string .
 

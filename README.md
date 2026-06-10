@@ -1,121 +1,105 @@
-# Extracting some semantic structure out of the Four Noble Truths<!-- omit from toc -->
-
-A tiny text to be used as sample for testing/debugging knowledge graph treatment pipelines.
+# Extracting (some) Knowledge Graph out of a tiny text<!-- omit from toc -->
 
 ## Table of contents<!-- omit from toc -->
 
 - [Introduction](#introduction)
-- [Running the full data workflow](#running-the-full-data-workflow)
+- [Running the full default data workflow](#running-the-full-default-data-workflow)
 
 ## Introduction
 
-This repository holds a very brief snippet of text (less than ten sentences), known as the ["Four Noble Truths"](https://en.wikipedia.org/wiki/Four_Noble_Truths), to be used as input to test various knowledge graph extraction data workflows.
+This repository holds a very brief snippet of text (less than ten sentences), known in Buddhism as the ["Four Noble Truths"](https://en.wikipedia.org/wiki/Four_Noble_Truths), to be used as input to test various knowledge graph extraction data workflows.
+Because we expect quite reduced execution runtime for the workflows (and thus speed up development) the only researched feature of the considered text is its brevity.
 
 The [chosen english version of the Four Noble Truths](250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md) was extracted from [Wikipedia's "Four Noble Truths" article](https://en.wikipedia.org/wiki/Four_Noble_Truths).
 
-## Running the full data workflow
+![Resulting Knowledge Graph](./Doc/neo4j_UI_graph_visualisation.png)
 
-Prerequisite Knowledge Graph (KG) extraction: launch a neo4j database
+## Running the full default data workflow
+
+### Context cleanup: BE SURE NOT TO MISS THIS STAGE
+
+Remove any previous database content.
+
+**WARNING**: the username/password given to the neo4j database are only **initial** values (valid when starting the database for the first time). Once the neo4j db has been initialized those values are "burned" into the `database` files...
 
 ```bash
-cd `git rev-parse --show-toplevel`
-docker build -t jejuness:jj_neo4j_docker https://github.com/EricBoix/jj_neo4j_docker.git
-# Note: are we missing -e NEO4J_dbms_security_procedures_unrestricted: "apoc.*" \
-docker run --rm --detach --name jj_neo4j_db \
-    --publish=7474:7474 --publish=7687:7687 \
-    --env NEO4J_AUTH=neo4j/your_password \
-    -e NEO4J_apoc_export_file_enabled=true \
-    -e NEO4J_apoc_import_file_enabled=true \
-    -e NEO4J_apoc_import_file_use__neo4j__config=true \
-    -v `pwd`/result_data/database:/data \
-    jejuness:jj_neo4j_docker
+cd `git rev-parse --show-toplevel`         # Implicit from now on
+export RESULTS_DIR=`pwd`/result_data       # Syntactic sugar
+\rm -fr result_data/database
 ```
 
-Transmitting required info to following DB process users
+### Configuring things
+
+Change the following neo4j database parameter values in ordor to suit your needs
+
+```bash
+export NEO4J_PORT=7687
+export NEO4J_USERNAME=neo4j
+export NEO4J_PASSWORD=your_password
+```
+
+The also adapt the following LLM server designation and credentials
+
+```bash
+LLM_MODEL_URL=https://ollama-ui.pagoda.liris.cnrs.fr/ollama/
+LLM_API_KEY=sk-<xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+LLM_MODEL_NAME=llama3:70b
+```
+
+Transmitting (by file) servers info to upcoming treatment processes:
 
 ```bash
 echo "# Neo4j server designation and associated credentials" > .env
-echo "NEO4J_URI=bolt://localhost:7687"                       >> .env
-echo "NEO4J_USERNAME=neo4j"                                  >> .env
-echo "NEO4J_PASSWORD=your_password"                          >> .env
+echo "NEO4J_URI=bolt://localhost:$NEO4J_PORT"                >> .env
+echo "NEO4J_USERNAME=$NEO4J_USERNAME"                        >> .env
+echo "NEO4J_PASSWORD=$NEO4J_PASSWORD"                        >> .env
+#
+echo "### LLM server designation and associate credential" >> .env
+echo "MODEL_URL=$LLM_MODEL_URL"                            >> .env
+echo "API_KEY=$LLM_API_KEY"                                >> .env
+echo "MODEL=$LLM_MODEL_NAME"                               >> .env
 ```
 
-Configure the KG (Knowledge Graph) extraction
+### Creating extraction workflow context: launch a neo4j database
 
 ```bash
-if [ ! -f .env ]; then
-  echo ".env file with DB info does not exist. Exiting."
-  return
-fi
-# Configuring the llm model to be used
-echo "### LLM server designation and associate credential"      >> .env
-echo "MODEL_URL=https://ollama-ui.pagoda.liris.cnrs.fr/ollama/" >> .env
-echo "API_KEY=sk-dde3f395ce1b4bfcb5c0d7f4c46b9c0c"              >> .env
-echo "MODEL=llama3:70b"                                         >> .env
+source jj_shell_utils/Neo4jDatabase.sh    # Implicit from now on
+launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 ```
 
-Run the (Knowledge Graph) extraction
+### Run the (Knowledge Graph) extraction
 
 ```bash
-docker build -t jejuness:jj_build_knowledge_graph https://github.com/EricBoix/jj_build_knowledge_graph.git#:DockerContext
-docker run --rm --tty --name jj_build_knowledge_graph \
-  --network host \
-  -v `pwd`/original_data:/data \
-  --env-file .env \
-  jejuness:jj_build_knowledge_graph extracting_graph_semantic_chuncker.py --input_directory /data \
-  --load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md 
+# Note: the documents are implicitly in <cwd>/original_data sub-directory
+extract_knowledge_graph '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
 ```
 
-Dump the database content for later usage
+### Dump the database content for later usage (optional)
 
 ```bash
-# Dumping requires the DB to be halted properly
-docker stop $(docker ps -q --filter ancestor=jejuness:jj_neo4j_docker )
-docker run --interactive --tty --rm  \
-    --volume=`pwd`/result_data/database:/data \
-    --volume=`pwd`/result_data/backups:/backups \
-    neo4j/neo4j-admin neo4j-admin database dump neo4j --to-path=/backups
-# Alas, when restoring the dump, the provided database name must have a 
-# length between 1 and 63 characters...
-mv result_data/backups/neo4j.dump result_data/backups/neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump
+dump_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump
 ```
 
-Restart the database (out of previous dump)...
+In order to validate the dump, erase the database and restore it (out of the 
+previous dump)...
 
 ```bash
-rm -fr result_data/database     # WARNING: this deletes all your databases !
-# The name of the dump file DOES matter: we have to restore it properly
-mv result_data/backups/neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump result_data/backups/neo4j.dump
-docker run --interactive --tty --rm \
-    --volume=`pwd`/result_data/database:/data \
-    --volume=`pwd`/result_data/backups:/backups \
-    neo4j/neo4j-admin neo4j-admin database load neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown --from-path=/backups
-
-# Neo4j launching command is identical as the one done above
-docker run --rm --detach --name jj_neo4j_db \
-    --publish=7474:7474 --publish=7687:7687 \
-    --env NEO4J_AUTH=neo4j/your_password \
-    -e NEO4J_apoc_export_file_enabled=true \
-    -e NEO4J_apoc_import_file_enabled=true \
-    -e NEO4J_apoc_import_file_use__neo4j__config=true \
-    -v `pwd`/result_data/database:/data \
-    jejuness:jj_neo4j_docker
+# WARNING: this DELETEs the existing database
+rm -fr $RESULTS_DIR/database     
+restore_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump
+launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 ```
 
-Eventually, extract knowledge graph [Turtle](https://en.wikipedia.org/wiki/Turtle_(syntax)) FILE
+### Extract knowledge graph
+
+Note: the KG file uses the [Turtle](https://en.wikipedia.org/wiki/Turtle_(syntax)) format.
 
 ```bash
-docker build -t jejuness:jj_neo4j_to_rdf_ttl https://github.com/EricBoix/jj_neo4j_to_rdf_ttl.git#:DockerContext
-docker run --rm \
-  --network host \
-  -v `pwd`/result_data:/output \
-  --env-file .env \
-  jejuness:jj_neo4j_to_rdf_ttl \
-  neo4j_to_rdf.py /output/graph.ttl
+dump_knowledge_graph_in_turtle $RESULTS_DIR Four-Noble-Truths-Wikipedia-translation-Markdown.ttl
 ```
 
-and turn off the neo4j db
+Eventually turn the context off:
 
 ```bash
-docker stop $(docker ps -q --filter ancestor=jejuness:jj_neo4j_docker )
+stop_neo4j_db
 ```
