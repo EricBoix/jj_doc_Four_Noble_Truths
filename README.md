@@ -16,6 +16,13 @@ The [chosen english version of the Four Noble Truths](250_BCE_-_Dhammacakkappava
 
 ## Running the full default data workflow
 
+### Setup: fetch workflow utilities
+
+```bash
+cd `git rev-parse --show-toplevel`         # Implicit from now on
+git clone https://github.com/EricBoix/jj_worflow_shell.git jj_shell_utils
+```
+
 ### Context cleanup: BE SURE NOT TO MISS THIS STAGE
 
 Remove any previous database content.
@@ -23,7 +30,7 @@ Remove any previous database content.
 **WARNING**: the username/password given to the neo4j database are only **initial** values (valid when starting the database for the first time). Once the neo4j db has been initialized those values are "burned" into the `database` files...
 
 ```bash
-cd `git rev-parse --show-toplevel`         # Implicit from now on
+
 export RESULTS_DIR=`pwd`/result_data       # Syntactic sugar
 \rm -fr result_data/database
 ```
@@ -81,7 +88,7 @@ extract_knowledge_graph '--load_markdown_document 250_BCE_-_Dhammacakkappavattan
 dump_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump
 ```
 
-In order to validate the dump, erase the database and restore it (out of the 
+In order to validate the dump, erase the database and restore it (out of the
 previous dump)...
 
 ```bash
