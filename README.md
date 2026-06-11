@@ -30,14 +30,13 @@ Remove any previous database content.
 **WARNING**: the username/password given to the neo4j database are only **initial** values (valid when starting the database for the first time). Once the neo4j db has been initialized those values are "burned" into the `database` files...
 
 ```bash
-
 export RESULTS_DIR=`pwd`/result_data       # Syntactic sugar
 \rm -fr result_data/database
 ```
 
 ### Configuring things
 
-Change the following neo4j database parameter values in ordor to suit your needs
+Change the following neo4j database parameter values in order to suit your needs
 
 ```bash
 export NEO4J_PORT=7687
@@ -49,7 +48,7 @@ The also adapt the following LLM server designation and credentials
 
 ```bash
 LLM_MODEL_URL=https://ollama-ui.pagoda.liris.cnrs.fr/ollama/
-LLM_API_KEY=sk-<xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx>
+LLM_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 LLM_MODEL_NAME=llama3:70b
 ```
 
@@ -79,7 +78,7 @@ launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 ```bash
 source jj_shell_utils/treatments.sh   # Implicit from now on
 # Note: the documents are implicitly in <cwd>/original_data sub-directory
-extract_knowledge_graph '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
+extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
 ```
 
 ### Dump the database content for later usage (optional)
