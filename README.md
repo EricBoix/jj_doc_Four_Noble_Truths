@@ -15,6 +15,9 @@ The [chosen english version of the Four Noble Truths](250_BCE_-_Dhammacakkappava
 
 ![Resulting Knowledge Graph](./Doc/neo4j_UI_graph_visualisation.png)
 
+and if we remove the document structure information (Document type nodes) we get
+![Resulting Knowledge Graph without Document](./Doc/neo4j_UI_graph_visualisation_without_Document.png)
+
 ## Running the full default data workflow
 
 ### Setup: fetch workflow utilities
