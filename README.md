@@ -20,7 +20,7 @@ The [chosen english version of the Four Noble Truths](250_BCE_-_Dhammacakkappava
 
 ```bash
 cd `git rev-parse --show-toplevel`         # Implicit from now on
-git clone https://github.com/EricBoix/jj_worflow_shell.git jj_shell_utils
+git clone https://github.com/EricBoix/jj_worflow_shell.git
 ```
 
 ### Context cleanup: BE SURE NOT TO MISS THIS STAGE
@@ -69,14 +69,14 @@ echo "MODEL=$LLM_MODEL_NAME"                               >> .env
 ### Creating extraction workflow context: launch a neo4j database
 
 ```bash
-source jj_shell_utils/Neo4jDatabase.sh    # Implicit from now on
+source jj_worflow_shell//Neo4jDatabase.sh    # Implicit from now on
 launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 ```
 
 ### Run the (Knowledge Graph) extraction
 
 ```bash
-source jj_shell_utils/treatments.sh   # Implicit from now on
+source jj_worflow_shell//treatments.sh   # Implicit from now on
 # Note: the documents are implicitly in <cwd>/original_data sub-directory
 extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
 ```
