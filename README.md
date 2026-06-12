@@ -4,6 +4,7 @@
 
 - [Introduction](#introduction)
 - [Running the full default data workflow](#running-the-full-default-data-workflow)
+- [Sentence based Knowledge Graph extraction](#sentence-based-knowledge-graph-extraction)
 
 ## Introduction
 
@@ -77,7 +78,6 @@ launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 
 ```bash
 source jj_worflow_shell//treatments.sh   # Implicit from now on
-# Note: the documents are implicitly in <cwd>/original_data sub-directory
 extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
 ```
 
@@ -110,3 +110,20 @@ Eventually turn the context off:
 ```bash
 stop_neo4j_db
 ```
+
+## Sentence based Knowledge Graph extraction
+
+Instead of defaulting to document structure aware chunking, we can use a sentence based chunking as follows
+
+```bash
+source jj_worflow_shell//treatments.sh   # Implicit from now on
+extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md --load_json_document Four_Noble_Truth_-_Sentences_as_LangChain_document.json' 
+```
+
+```bash
+dump_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation-added-sentences.Markdown.dump
+```
+
+which yields
+
+![KG with sentences](./Doc/neo4j_UI_graph_visualisation_added_sentences.png)
