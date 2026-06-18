@@ -4,7 +4,7 @@
 
 - [Introduction](#introduction)
 - [Running the full default data workflow](#running-the-full-default-data-workflow)
-- [Sentence based Knowledge Graph extraction](#sentence-based-knowledge-graph-extraction)
+- [Sentence-based Knowledge Graph extraction](#sentence-based-knowledge-graph-extraction)
 
 ## Introduction
 
@@ -40,47 +40,19 @@ export RESULTS_DIR=`pwd`/result_data       # Syntactic sugar
 
 ### Configuring things
 
-Change the following neo4j database parameter values in order to suit your needs
-
-```bash
-export NEO4J_PORT=7687
-export NEO4J_USERNAME=neo4j
-export NEO4J_PASSWORD=your_password
-```
-
-The also adapt the following LLM server designation and credentials
-
-```bash
-LLM_MODEL_URL=https://ollama-ui.pagoda.liris.cnrs.fr/ollama/
-LLM_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-LLM_MODEL_NAME=llama3:70b
-```
-
-Transmitting (by file) servers info to upcoming treatment processes:
-
-```bash
-echo "# Neo4j server designation and associated credentials" > .env
-echo "NEO4J_URI=bolt://localhost:$NEO4J_PORT"                >> .env
-echo "NEO4J_USERNAME=$NEO4J_USERNAME"                        >> .env
-echo "NEO4J_PASSWORD=$NEO4J_PASSWORD"                        >> .env
-#
-echo "### LLM server designation and associate credential" >> .env
-echo "MODEL_URL=$LLM_MODEL_URL"                            >> .env
-echo "API_KEY=$LLM_API_KEY"                                >> .env
-echo "MODEL=$LLM_MODEL_NAME"                               >> .env
-```
+Refer to [jj_workflow_shell configuration stage](https://github.com/EricBoix/jj_worflow_shell.git/Readme.md) in order to configure the shell utilities/methods.
 
 ### Creating extraction workflow context: launch a neo4j database
 
 ```bash
-source jj_worflow_shell//Neo4jDatabase.sh    # Implicit from now on
+source jj_worflow_shell/Neo4jDatabase.sh    # Implicit from now on
 launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 ```
 
 ### Run the (Knowledge Graph) extraction
 
 ```bash
-source jj_worflow_shell//treatments.sh   # Implicit from now on
+source jj_worflow_shell/treatments.sh   # Implicit from now on
 extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
 ```
 
@@ -114,7 +86,7 @@ Eventually turn the context off:
 stop_neo4j_db
 ```
 
-## Sentence based Knowledge Graph extraction
+## Sentence-based Knowledge Graph extraction
 
 Instead of defaulting to document structure aware chunking, we can use a sentence based chunking as follows
 
