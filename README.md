@@ -24,7 +24,7 @@ and if we remove the document structure information (Document type nodes) we get
 
 ```bash
 cd `git rev-parse --show-toplevel`         # Implicit from now on
-git clone https://github.com/EricBoix/jj_worflow_shell.git
+git clone https://github.com/EricBoix/jj_workflow_shell.git
 ```
 
 ### Context cleanup: BE SURE NOT TO MISS THIS STAGE
@@ -35,24 +35,24 @@ Remove any previous database content.
 
 ```bash
 export RESULTS_DIR=`pwd`/result_data       # Syntactic sugar
-\rm -fr result_data/database
+\rm -fr $RESULTS_DIR/database
 ```
 
 ### Configuring things
 
-Refer to [jj_workflow_shell configuration stage](https://github.com/EricBoix/jj_worflow_shell.git/Readme.md) in order to configure the shell utilities/methods.
+Refer to [jj_workflow_shell configuration stage](https://github.com/EricBoix/jj_workflow_shell.git/Readme.md) in order to configure the shell utilities/methods.
 
 ### Creating extraction workflow context: launch a neo4j database
 
 ```bash
-source jj_worflow_shell/Neo4jDatabase.sh    # Implicit from now on
+source jj_workflow_shell/Neo4jDatabase.sh    # Implicit from now on
 launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 ```
 
 ### Run the (Knowledge Graph) extraction
 
 ```bash
-source jj_worflow_shell/treatments.sh   # Implicit from now on
+source jj_workflow_shell/treatments.sh   # Implicit from now on
 extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
 ```
 
@@ -91,7 +91,7 @@ stop_neo4j_db
 Instead of defaulting to document structure aware chunking, we can use a sentence based chunking as follows
 
 ```bash
-source jj_worflow_shell//treatments.sh   # Implicit from now on
+source jj_workflow_shell//treatments.sh   # Implicit from now on
 extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md --load_json_document Four_Noble_Truth_-_Sentences_as_LangChain_document.json' 
 ```
 
