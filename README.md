@@ -3,7 +3,7 @@
 ## Table of contents<!-- omit from toc -->
 
 - [Introduction](#introduction)
-- [Running the full default data workflow](#running-the-full-default-data-workflow)
+- [Running the full data workflow](#running-the-full-data-workflow)
 - [Sentence-based Knowledge Graph extraction](#sentence-based-knowledge-graph-extraction)
 
 ## Introduction
@@ -18,48 +18,45 @@ The [chosen english version of the Four Noble Truths](250_BCE_-_Dhammacakkappava
 and if we remove the document structure information (Document type nodes) we get
 ![Resulting Knowledge Graph without Document](./Doc/neo4j_UI_graph_visualisation_without_Document.png)
 
-## Running the full default data workflow
+## Running the full data workflow
 
-### Setup: fetch workflow utilities
+Fetch [jj_workflow_shell](https://github.com/EricBoix/jj_workflow_shell#fetch-the-workflow-utilities) 
 
 ```bash
 cd `git rev-parse --show-toplevel`         # Implicit from now on
 git clone https://github.com/EricBoix/jj_workflow_shell.git
+source jj_workflow_shell/init.bash
 ```
 
-### Context cleanup: BE SURE NOT TO MISS THIS STAGE
+and [configure it](https://github.com/EricBoix/jj_workflow_shell#configure-the-shell-utilities) by editing the resulting `.env` file.
 
-Remove any previous database content.
-
-**WARNING**: the username/password given to the neo4j database are only **initial** values (valid when starting the database for the first time). Once the neo4j db has been initialized those values are "burned" into the `database` files...
+Define your target directories
 
 ```bash
+set +a                                     # For vscode command runner execution
 export RESULTS_DIR=`pwd`/result_data       # Syntactic sugar
-\rm -fr $RESULTS_DIR/database
+export DATABASE_DIR=$RESULTS_DIR/database
+\rm -fr $DATABASE_DIR                      # Clean slate from previous run
 ```
 
-### Configuring things
+Note: no need for `pdf` conversion since the original data is here in a markdown format.
 
-Refer to [jj_workflow_shell configuration stage](https://github.com/EricBoix/jj_workflow_shell.git/Readme.md) in order to configure the shell utilities/methods.
-
-### Creating extraction workflow context: launch a neo4j database
+Prerequisite to Knowledge Graph (KG) extraction: launch a neo4j database
 
 ```bash
-source jj_workflow_shell/Neo4jDatabase.sh    # Implicit from now on
-launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
+jj_neo4j_launch_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
 ```
 
-### Run the (Knowledge Graph) extraction
+Run the (Knowledge Graph) extraction
 
 ```bash
-source jj_workflow_shell/treatments.sh   # Implicit from now on
-extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
+jj_extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md' 
 ```
 
-### Dump the database content for later usage (optional)
+Dump the database content for later usage (optional)
 
 ```bash
-dump_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump
+jj_neo4j_dump_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump
 ```
 
 In order to validate the dump, erase the database and restore it (out of the
@@ -67,23 +64,20 @@ previous dump)...
 
 ```bash
 # WARNING: this DELETEs the existing database
-rm -fr $RESULTS_DIR/database     
-restore_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump
-launch_neo4j_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
+jj_neo4j_restore_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation.Markdown.dump
 ```
 
-### Extract knowledge graph
-
-Note: the KG file uses the [Turtle](https://en.wikipedia.org/wiki/Turtle_(syntax)) format.
+Extract knowledge graph in [Turtle](https://en.wikipedia.org/wiki/Turtle_(syntax)) format:
 
 ```bash
-dump_knowledge_graph_in_turtle $RESULTS_DIR Four-Noble-Truths-Wikipedia-translation-Markdown.ttl
+jj_neo4j_launch_db $RESULTS_DIR $NEO4J_PORT $NEO4J_USERNAME/$NEO4J_PASSWORD
+jj_dump_knowledge_graph_in_turtle $RESULTS_DIR Four-Noble-Truths-Wikipedia-translation-Markdown.ttl
 ```
 
 Eventually turn the context off:
 
 ```bash
-stop_neo4j_db
+jj_neo4j_stop_db
 ```
 
 ## Sentence-based Knowledge Graph extraction
@@ -91,12 +85,11 @@ stop_neo4j_db
 Instead of defaulting to document structure aware chunking, we can use a sentence based chunking as follows
 
 ```bash
-source jj_workflow_shell//treatments.sh   # Implicit from now on
-extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md --load_json_document Four_Noble_Truth_-_Sentences_as_LangChain_document.json' 
+jj_extract_knowledge_graph `pwd`/original_data '--load_markdown_document 250_BCE_-_Dhammacakkappavattana_Sutta_Four_Noble_Truths_Wikipedia_translation.md --load_json_document Four_Noble_Truth_-_Sentences_as_LangChain_document.json' 
 ```
 
 ```bash
-dump_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation-added-sentences.Markdown.dump
+jj_neo4j_dump_database $RESULTS_DIR neo4j.Four-Noble-Truths-Wikipedia-translation-added-sentences.Markdown.dump
 ```
 
 which yields
